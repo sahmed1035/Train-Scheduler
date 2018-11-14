@@ -1,29 +1,24 @@
 .jumbotron {
-   color: white;
-   background-image: url("../images/train_bg.jpg");
-   background-repeat: no-repeat;
-   text-align:right;
-   text-decoration: darkgrey;
-  
-}
-
-.card-header{
-     background-color: rgb(51,64,169);
-     color: white;
-     font-size: 24px;
-
-}
-
-.container {margin-top: 2%;}
-
-.formLable{
-    font-size: 16px;
-    font-weight: bold;
-}
-
-
-#employee-table th,
-    td {
-      display: inline-block;
-      width: 16.575%;}
-
+    color: white;
+    background-image: url("../images/train_bg.jpg");
+    background-repeat: no-repeat;
+    text-align:center;
+    text-decoration: white; 
+    padding-bottom: 150px;
+ }
+ 
+ .card-header{
+      background-color: rgb(51,64,169);
+      color: white;
+      font-size: 24px;
+ 
+ }
+ 
+ .container {margin-top: 2%;}
+ 
+ .formLable{
+     font-size: 16px;
+     font-weight: bold;
+ }
+ 
+ 
