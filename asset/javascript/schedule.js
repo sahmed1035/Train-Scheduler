@@ -9,28 +9,42 @@
 
 
 // Initialize Firebase
-var config = {
-  apiKey: "AIzaSyAyvYcDGnRQcQcna_4CJBMipyYFu2sZ9Z4",
-  authDomain: "traintime-b27d4.firebaseapp.com",
-  databaseURL: "https://traintime-b27d4.firebaseio.com",
-  projectId: "traintime-b27d4",
-  storageBucket: "",
-  messagingSenderId: "401935247613"
-};
-firebase.initializeApp(config);
+// var config = {
+//   apiKey: "AIzaSyAyvYcDGnRQcQcna_4CJBMipyYFu2sZ9Z4",
+//   authDomain: "traintime-b27d4.firebaseapp.com",
+//   databaseURL: "https://traintime-b27d4.firebaseio.com",
+//   projectId: "traintime-b27d4",
+//   storageBucket: "",
+//   messagingSenderId: "401935247613"
+// };
+// firebase.initializeApp(config);
+
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAyvYcDGnRQcQcna_4CJBMipyYFu2sZ9Z4",
+    authDomain: "traintime-b27d4.firebaseapp.com",
+    databaseURL: "https://traintime-b27d4.firebaseio.com",
+    projectId: "traintime-b27d4",
+    storageBucket: "traintime-b27d4.appspot.com",
+    messagingSenderId: "401935247613"
+  };
+  firebase.initializeApp(config);
 
 var database = firebase.database();
-
+var trainName; 
+var destination;
+var firstTrainTime ;
+var frequency;
 // 2. Button for adding Employees
 $("#add-train-btn").on("click", function (event) {
   event.preventDefault();
 
-
+alert("clicked");
   // Grabs user input
-  var trainName = $("#train-name-input").val().trim();
-  var destination = $("#destination-input").val().trim();
-  var firstTrainTime = moment($("#time-input").val().trim(), "MM/DD/YYYY").format("X");
-  var frequency = $("#frequency-input").val().trim();
+   trainName = $("#train-name-input").val().trim();
+    destination = $("#destination-input").val().trim();
+   firstTrainTime = $("#time-input").val().trim(); 
+    frequency = $("#frequency-input").val().trim();
   
   // Creates local "temporary" object for holding train data
   var newTrain = {
@@ -43,13 +57,7 @@ $("#add-train-btn").on("click", function (event) {
   // Uploads train data to the database
   database.ref().push(newTrain);
 
-  // Logs everything to console
-  console.log(newTrain.name);
-  console.log(newTrain.destination);
-  console.log(newTrain.trainTime);
-  console.log(newTrain.frequency);
-
-  alert("Train successfully added");
+ 
 
   // Clears all of the text-boxes
   $("#train-name-input").val("");
@@ -64,23 +72,10 @@ database.ref().on("child_added", function (childSnapshot) {
   console.log(childSnapshot.val());
 
   // Store everything into a variable.
-  var trainName = childSnapshot.val().name;
-  var destination = childSnapshot.val().destination;
-  var firstTrainTime = childSnapshot.val().trainTime;
-  var frequency = childSnapshot.val().frequency;
-
-  //loging train Info
-  console.log(trainName);
-  console.log(destination);
-  console.log(firstTrainTime);
-  console.log(frequency);
-
-  // Calculate the Next Arival Time.
-  // var ts = moment().diff(moment(firstTrainTime+frequency, "X"), "seconds");
-
-  // var nextArival = moment(ts);
-
-  // var minAway = moment.duration(nextArival, "minutes").humanize(); 
+   trainName = childSnapshot.val().name;
+    destination = childSnapshot.val().destination;
+    firstTrainTime = childSnapshot.val().trainTime;
+    frequency = childSnapshot.val().frequency;
 
 
 
@@ -97,8 +92,8 @@ database.ref().on("child_added", function (childSnapshot) {
   var diffTime = moment().diff(moment(firstTrainTimeConverted), "minutes");
   console.log("DIFFERENCE IN TIME: " + diffTime);
 
-  // Time apart (remainder)
-  var tRemainder = diffTime % frequency;
+  // Time apart (remainder)  (frequency - remainder = minAway )
+  var tRemainder = diffTime % frequency; 
   console.log(tRemainder);
 
   // Minute Until Train
@@ -107,8 +102,18 @@ database.ref().on("child_added", function (childSnapshot) {
 
   // Next Train
   var nextArival = moment().add(minAway, "minutes");
-  console.log("ARRIVAL TIME: " + moment(nextArival).format("hh:mm"));
+  console.log("ARRIVAL TIME: " + moment(nextArival).format("hh:mm A"));
  
+
+
+//    function meridiem (hours, minutes, isLower) {
+//     if (nextArival > 11) {
+//         return isLower ? 'pm' : 'PM';
+//     } else {
+//         return isLower ? 'am' : 'AM';
+//     }
+// }
+
 
 
   // Create the new row
@@ -117,18 +122,17 @@ database.ref().on("child_added", function (childSnapshot) {
   //   $("<td>").text(destination),
   //   $("<td>").text(frequency),
   //   $("<td>").text(moment(nextArival).format("hh:mm")),
-  //   // $("<td>").text(minAway)
-  //   $("<td>").text(moment.duration(minAway, "minutes").humanize())
+  //   $("<td>").text(minAway)
+  //   // $("<td>").text(moment.duration(minAway, "minutes").humanize())
   // );
 
   // created a global str variable to do string concatenation
   strRow ="<tr><td>"+trainName+"</td><td>"+destination+"</td><td>"
-  +frequency+"</td><td>"+moment(nextArival).format("hh:mm")+"</td> <td>"
-  +moment.duration(minAway, "minutes").humanize()+"</td></tr>";
+  +frequency+"</td><td>"+moment(nextArival).format("hh:mm A")+"</td> <td>"
+  +minAway +" minutes</td></tr>";
 
   console.log(strRow);
-  // Append the new row to the table
-  $("tbody").append(strRow);
+ $("tbody").append(strRow);
 });
 
 
